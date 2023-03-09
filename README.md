@@ -15,4 +15,4 @@ The same tile movement mechanics as v0 but all randomness removed (deterministic
 To access analytics relating to the training efficiency of an algorithm on a particular version run ```tensorboard --logdir .\log\Twenty48-version_x\algorithm``` e.g. to access the analysis for the dqn algorithm for the Twenty48-v0 environment run ```tensorboard --logdir .\log\Twenty48-v0\dqn```
 
 ## Reward Function
-The reward is calculated as per the standard implementation of 2048. After a move, the resulting tile values from the newly merged tiles are summed and that becomes the reward for that step. Additionally, for any move that does not change the state is rewarded with a negative reward (-0.1).
+The reward is calculated as per the standard implementation of 2048. After a move, the resulting tile values from the newly merged tiles are summed and that becomes the reward for that step. Additionally, any move that does not change the state is rewarded with a negative reward (-0.1).
