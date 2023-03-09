@@ -10,7 +10,7 @@ LEFT = 3
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--task', type=str, default='twenty48stoch-v0')
+    parser.add_argument('--task', type=str, default='Twenty48stoch-v0')
     args = parser.parse_known_args()[0]
     return args
 
