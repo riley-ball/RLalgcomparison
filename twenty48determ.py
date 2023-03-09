@@ -214,7 +214,7 @@ class Twenty48determ(gym.Env):
 
         self.steps_beyond_terminated = None
 
-        if self.render_mode == "human":
+        if self.render_mode == "human" or self.render_mode == "ai":
             self.render()
         return np.array(self.state, dtype=np.uint8).flatten(), {}
 
@@ -228,6 +228,10 @@ class Twenty48determ(gym.Env):
             return
         
         if self.render_mode == "human":
+            for row in self.state:
+                print(row)
+            print("-----------------")
+        elif self.render_mode == "ai":
             for row in self.state:
                 print(row)
             print("-----------------")

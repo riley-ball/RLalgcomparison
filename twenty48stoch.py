@@ -82,7 +82,7 @@ class Twenty48stoch(gym.Env):
     """
 
     metadata = {
-        "render_modes": ["human", "rgb_array"],
+        "render_modes": ["human", "ai"],
         "render_fps": 30,
     }
 
@@ -218,7 +218,7 @@ class Twenty48stoch(gym.Env):
 
         self.steps_beyond_terminated = None
 
-        if self.render_mode == "human":
+        if self.render_mode == "human" or self.render_mode == "ai":
             self.render()
         return np.array(self.state, dtype=np.uint8).flatten(), {}
 
@@ -234,6 +234,10 @@ class Twenty48stoch(gym.Env):
         if self.render_mode == "human":
             for row in self.state:
                 print([2**x if x != 0 else 0 for x in row])
+            print("-----------------")
+        elif self.render_mode == "ai":
+            for row in self.state:
+                print(row)
             print("-----------------")
 
         elif self.render_mode == "rgb_array":
