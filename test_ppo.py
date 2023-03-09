@@ -2,7 +2,7 @@ import argparse
 import os
 import pprint
 
-import gymnasium as gym
+import gym
 import numpy as np
 import torch
 from torch.utils.tensorboard import SummaryWriter
@@ -14,10 +14,8 @@ from tianshou.trainer import onpolicy_trainer
 from tianshou.utils import TensorboardLogger
 from tianshou.utils.net.common import ActorCritic, DataParallelNet, Net
 from tianshou.utils.net.discrete import Actor, Critic
-from twenty48v1 import Twenty48
-from twenty48v0 import Twenty48
-
-print(gym.envs.registry)
+from twenty48stoch import Twenty48stoch
+from twenty48determ import Twenty48determ
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -56,6 +54,15 @@ def get_args():
 
 
 def test_ppo(args=get_args()):
+    # Custom entry point for Twenty48 environments, comment out if using different environment
+    env_name = args.task.split("-")[0]
+    gym.envs.register(
+        id=args.task,
+        entry_point=f'{"".join(env_name).lower()}:{env_name}',
+        max_episode_steps=1000,
+        reward_threshold=float('inf'),
+    )
+
     env = gym.make(args.task)
     args.state_shape = env.observation_space.shape or env.observation_space.n
     args.action_shape = env.action_space.shape or env.action_space.n

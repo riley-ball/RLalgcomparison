@@ -2,7 +2,7 @@ import argparse
 import os
 import pprint
 
-import gymnasium as gym
+import gym
 import numpy as np
 import torch
 from torch.utils.tensorboard import SummaryWriter
@@ -14,8 +14,8 @@ from tianshou.trainer import offpolicy_trainer
 from tianshou.utils import TensorboardLogger
 from tianshou.utils.net.common import Net
 from tianshou.utils.net.discrete import Actor, Critic
-from twenty48v1 import Twenty48
-from twenty48v0 import Twenty48
+from twenty48stoch import Twenty48stoch
+from twenty48determ import Twenty48determ
 
 
 def get_args():
@@ -51,11 +51,11 @@ def get_args():
 
 
 def test_discrete_sac(args=get_args()):
-
     # Custom entry point for Twenty48 environments, comment out if using different environment
+    env_name = args.task.split("-")[0]
     gym.envs.register(
         id=args.task,
-        entry_point=f'{"".join(args.task.split("-")).lower()}:Twenty48',
+        entry_point=f'{"".join(env_name).lower()}:{env_name}',
         max_episode_steps=1000,
         reward_threshold=float('inf'),
     )
