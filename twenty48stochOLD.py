@@ -15,7 +15,6 @@ DOWN = 1
 RIGHT = 2
 LEFT = 3
 
-
 class Twenty48stoch(gym.Env):
     """
     ### Description
@@ -101,9 +100,7 @@ class Twenty48stoch(gym.Env):
         self.steps_beyond_terminated = None
 
         self.action_space = spaces.Discrete(4)
-        self.observations = 11
-        self.observation_space = spaces.Box(0, self.observations, shape=(
-            self.rows*self.cols*self.observations,), dtype=np.uint8)
+        self.observation_space = spaces.Box(0, 11, shape=(self.rows*self.cols,), dtype=np.uint8)
 
     def step(self, action):
         err_msg = f"{action!r} ({type(action)}) invalid"
@@ -124,21 +121,21 @@ class Twenty48stoch(gym.Env):
                 self._move_right(self.state[row])
         elif action == LEFT:
             for row, _ in enumerate(self.state):
-                # Move all values to the left
+                # Move all values to the left  
                 self._move_left(self.state[row])
                 # Merge values left
                 inc_score += self._merge_left(self.state[row])
-                # Move all values to the left
+                # Move all values to the left  
                 self._move_left(self.state[row])
         elif action == UP:
             # Transpose the board
             self.state = self._transpose_2d_list(self.state)
             for row, _ in enumerate(self.state):
-                # Move all values to the left
+                # Move all values to the left  
                 self._move_left(self.state[row])
                 # Merge values left
                 inc_score += self._merge_left(self.state[row])
-                # Move all values to the left
+                # Move all values to the left  
                 self._move_left(self.state[row])
             # Transpose the board back
             self.state = self._transpose_2d_list(self.state)
@@ -156,7 +153,7 @@ class Twenty48stoch(gym.Env):
             self.state = self._transpose_2d_list(self.state)
         else:
             raise Exception("Invalid action")
-
+        
         terminal = self._is_terminal()
         # check if the state has changed
         if np.array_equal(old_state, self.state):
@@ -183,8 +180,8 @@ class Twenty48stoch(gym.Env):
             if not terminal and len(self.get_empty_spaces()) != 0:
                 # generate a new tile
                 self.spawn_tile()
-        one_hot = self.one_hot_encode(self.state)
-        return np.array(one_hot, dtype=np.uint8).flatten(), reward, terminal, False, {}
+    
+        return np.array(self.state, dtype=np.uint8).flatten(), reward, terminal, False, {}
 
     def reset(
         self,
@@ -193,9 +190,9 @@ class Twenty48stoch(gym.Env):
         options: Optional[dict] = None,
     ):
         super().reset(seed=seed)
-
+        
         # initialise state to zeros
-        self.state = np.zeros((self.rows, self.cols), dtype=np.uint8)
+        self.state = np.zeros((self.rows,self.cols), dtype=np.uint8)
 
         # generate two random positions
         pos1 = np.random.randint(0, self.rows, 2)
@@ -223,8 +220,7 @@ class Twenty48stoch(gym.Env):
 
         if self.render_mode == "human" or self.render_mode == "ai":
             self.render()
-        one_hot = self.one_hot_encode(self.state)
-        return np.array(one_hot, dtype=np.uint8).flatten(), {}
+        return np.array(self.state, dtype=np.uint8).flatten(), {}
 
     def render(self):
         """Render 2D matrix to terminal"""
@@ -234,7 +230,7 @@ class Twenty48stoch(gym.Env):
                 "You can specify the render_mode at initialization, "
             )
             return
-
+        
         if self.render_mode == "human":
             for row in self.state:
                 print([2**x if x != 0 else 0 for x in row])
@@ -246,13 +242,7 @@ class Twenty48stoch(gym.Env):
 
         elif self.render_mode == "rgb_array":
             raise NotImplementedError
-
-    def one_hot_encode(self, matrix):
-        # convert each value in the matrix to a one-hot encoded vector
-        # print(matrix.flatten())
-        # print(np.eye(self.observations)[matrix.flatten()])
-        return np.eye(self.observations)[np.array(matrix).flatten()]
-
+        
     def get_empty_spaces(self):
         # Get a list of all empty spaces
         empty_spaces = []
@@ -261,7 +251,7 @@ class Twenty48stoch(gym.Env):
                 if self.state[i][j] == 0:
                     empty_spaces.append((i, j))
         return empty_spaces
-
+        
     def spawn_tile(self):
         """Spawn a new tile in a random empty space"""
         # Get a list of all empty spaces
@@ -282,7 +272,7 @@ class Twenty48stoch(gym.Env):
                     if tile == neighbour:
                         return False
         return True
-
+    
     def _transpose_2d_list(self, matrix):
         return [list(row) for row in zip(*matrix)]
 
@@ -316,7 +306,7 @@ class Twenty48stoch(gym.Env):
         if row[0] == row[1] and row[0] != 0:
             row[0] += 1
             row[1] = 0
-            score += 2 ** row[0]
+            score += 2 ** row[0] 
         if row[1] == row[2] and row[1] != 0:
             row[1] += 1
             row[2] = 0
@@ -333,15 +323,15 @@ class Twenty48stoch(gym.Env):
         if row[2] == row[3] and row[2] != 0:
             row[3] += 1
             row[2] = 0
-            score += 2 ** row[3]
+            score += 2 ** row[3] 
         if row[1] == row[2] and row[1] != 0:
             row[2] += 1
             row[1] = 0
-            score += 2 ** row[2]
+            score += 2 ** row[2] 
         if row[0] == row[1] and row[0] != 0:
             row[1] += 1
             row[0] = 0
-            score += 2 ** row[1]
+            score += 2 ** row[1] 
         return score
 
     def matrix_neighbours(self, matrix):
@@ -354,24 +344,19 @@ class Twenty48stoch(gym.Env):
                     elif j == 3:
                         neighbours = [matrix[i][j-1], matrix[i+1][j]]
                     else:
-                        neighbours = [matrix[i][j-1],
-                                      matrix[i][j+1], matrix[i+1][j]]
+                        neighbours = [matrix[i][j-1], matrix[i][j+1], matrix[i+1][j]]
                 elif i == 3:
                     if j == 0:
                         neighbours = [matrix[i][j+1], matrix[i-1][j]]
                     elif j == 3:
                         neighbours = [matrix[i][j-1], matrix[i-1][j]]
                     else:
-                        neighbours = [matrix[i][j-1],
-                                      matrix[i][j+1], matrix[i-1][j]]
+                        neighbours = [matrix[i][j-1], matrix[i][j+1], matrix[i-1][j]]
                 else:
                     if j == 0:
-                        neighbours = [matrix[i][j+1],
-                                      matrix[i-1][j], matrix[i+1][j]]
+                        neighbours = [matrix[i][j+1], matrix[i-1][j], matrix[i+1][j]]
                     elif j == 3:
-                        neighbours = [matrix[i][j-1],
-                                      matrix[i-1][j], matrix[i+1][j]]
+                        neighbours = [matrix[i][j-1], matrix[i-1][j], matrix[i+1][j]]
                     else:
-                        neighbours = [matrix[i][j-1], matrix[i]
-                                      [j+1], matrix[i-1][j], matrix[i+1][j]]
+                        neighbours = [matrix[i][j-1], matrix[i][j+1], matrix[i-1][j], matrix[i+1][j]]
                 yield matrix[i][j], neighbours

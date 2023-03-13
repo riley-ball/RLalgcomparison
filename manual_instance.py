@@ -19,7 +19,6 @@ LEFT = 3
 '''
 
 
-
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--task', type=str, default='Twenty48stoch-v0')
@@ -27,6 +26,7 @@ def get_args():
     parser.add_argument('--run_mode', type=str, default='manual')
     args = parser.parse_known_args()[0]
     return args
+
 
 def main(args=get_args()):
     # Custom entry point for Twenty48 environments, comment out if using different environment
@@ -43,6 +43,7 @@ def main(args=get_args()):
         manual(env)
     elif args.run_mode == 'auto':
         auto(env)
+
 
 def manual(env):
     r = 0
@@ -76,6 +77,7 @@ enter q to quit")
                 env.reset()
     env.close()
 
+
 def auto(env):
     r = 0
     print("reward:", r)
@@ -91,6 +93,7 @@ def auto(env):
             r = 0
             env.reset()
     env.close()
+
 
 if __name__ == '__main__':
     main(get_args())

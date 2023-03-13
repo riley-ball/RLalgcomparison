@@ -21,9 +21,10 @@ import warnings
 # Suppress all warnings
 warnings.filterwarnings("ignore")
 
+
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--task', type=str, default='Twenty48-v1')
+    parser.add_argument('--task', type=str, default='Twenty48stoch-v0')
     parser.add_argument('--reward-threshold', type=float, default=None)
     parser.add_argument('--seed', type=int, default=1626)
     parser.add_argument('--eps-test', type=float, default=0.05)
@@ -45,7 +46,8 @@ def get_args():
     parser.add_argument('--test-num', type=int, default=100)
     parser.add_argument('--logdir', type=str, default='log')
     parser.add_argument('--render', type=float, default=0.3)
-    parser.add_argument('--prioritized-replay', action="store_true", default=False)
+    parser.add_argument('--prioritized-replay',
+                        action="store_true", default=False)
     parser.add_argument('--alpha', type=float, default=0.6)
     parser.add_argument('--beta', type=float, default=0.4)
     parser.add_argument(
@@ -53,6 +55,7 @@ def get_args():
     )
     args = parser.parse_known_args()[0]
     return args
+
 
 def test_dqn(args=get_args()):
     # Custom entry point for Twenty48 environments, comment out if using different environment
@@ -114,7 +117,8 @@ def test_dqn(args=get_args()):
     else:
         buf = VectorReplayBuffer(args.buffer_size, buffer_num=len(train_envs))
     # collector
-    train_collector = Collector(policy, train_envs, buf, exploration_noise=True)
+    train_collector = Collector(
+        policy, train_envs, buf, exploration_noise=True)
     test_collector = Collector(policy, test_envs, exploration_noise=True)
     # policy.set_eps(1)
     train_collector.collect(n_step=args.batch_size * args.training_num)
