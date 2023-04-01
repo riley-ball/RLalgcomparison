@@ -101,7 +101,7 @@ class Twenty48stoch(gym.Env):
         self.steps_beyond_terminated = None
 
         self.action_space = spaces.Discrete(4)
-        self.observations = 11
+        self.observations = 12
         self.observation_space = spaces.Box(0, self.observations, shape=(
             self.rows*self.cols*self.observations,), dtype=np.uint8)
 
@@ -159,7 +159,7 @@ class Twenty48stoch(gym.Env):
 
         terminal = self._is_terminal()
         # check if the state has changed
-        if np.array_equal(old_state, self.state):
+        if np.array_equal(old_state, self.state) and 11 not in np.array(self.state).flatten():
             # state has not changed
             reward = -0.1
         else:
@@ -250,7 +250,7 @@ class Twenty48stoch(gym.Env):
     def one_hot_encode(self, matrix):
         # convert each value in the matrix to a one-hot encoded vector
         # print(matrix.flatten())
-        # print(np.eye(self.observations)[matrix.flatten()])
+        # print(np.eye(self.observations))
         return np.eye(self.observations)[np.array(matrix).flatten()]
 
     def get_empty_spaces(self):
@@ -272,7 +272,7 @@ class Twenty48stoch(gym.Env):
         self.state[new_tile[0]][new_tile[1]] = np.random.choice([1, 2])
 
     def _is_terminal(self):
-        if 2048 in np.array(self.state).flatten():
+        if 11 in np.array(self.state).flatten():
             return True
         else:
             for tile, neighbours in self.matrix_neighbours(self.state):

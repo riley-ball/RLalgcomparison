@@ -159,6 +159,8 @@ class Twenty48determ(gym.Env):
         if np.array_equal(old_state, self.state):
             # state has not changed
             reward = -0.1
+            # reward = 0
+            pass
         else:
             if not terminal:
                 reward = inc_score
